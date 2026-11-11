@@ -1,14 +1,3 @@
-"""
-主要作用：作为直接预测对照模型，使用几何参数与两个主导模式参数直接预测 TE 偏振利特罗光栅
-的 0 级和 -1 级 RCWA 衍射效率，不进行 SMM 残差叠加。
-网络架构：输入序列为 [CLS, Geometry, Mode0, Mode1]；各 Token 映射至 96 维空间，经 2 层、
-2 头 Transformer 编码器后，将 CLS 特征输入 96-64-2 的 MLP，直接输出两通道 RCWA 效率。
-训练策略：10000 个样本按 8:1:1 划分，随机种子 42；仅用训练集拟合标准化器；采用 SmoothL1
-(beta=0.5)、AdamW（lr=3e-4，weight_decay=1e-4）、batch size 256、最多 1000 轮、梯度裁剪 1.0；
-ReduceLROnPlateau 连续 20 轮未改善时将学习率减半，最低 1e-6；连续 100 轮未改善则早停。
-输出内容：模型、标准化器、数据划分、训练历史、测试集预测与评价指标。本对照脚本不生成图片。
-"""
-
 import json
 import os
 import random
