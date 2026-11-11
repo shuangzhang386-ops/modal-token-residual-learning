@@ -1,13 +1,3 @@
-"""
-主要作用：加载基于 10000 个样本训练的 SMM 引导模态 Token 残差模型，对槽深和光栅周期扫描
-数据进行预测，并绘制 RCWA、SMM 与所提方法的四面板衍射效率对比图。
-模型架构：与 10000proposed_method.py 完全一致，输入 [CLS, Geometry, Mode0, Mode1]，使用
-2 层、2 头 Transformer 和 96-64-2 MLP 预测 RCWA-SMM 残差，最终效率为 SMM 与预测残差之和。
-输入文件：同目录下的 sweep_h_over_lambda_for_nn.csv、sweep_Lambda_over_lambda_for_nn.csv；
-模型与标准化器默认位于 10000proposed_method_results/models/。本脚本只执行推理，不重新训练。
-输出内容：带预测结果的 CSV，以及白色背景、Times New Roman 字体、900 dpi 的 PNG/SVG 图片。
-"""
-
 import importlib.util
 from pathlib import Path
 
