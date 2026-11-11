@@ -1,15 +1,3 @@
-"""
-主要作用：作为仅使用几何参数的消融模型，去除 Mode0 和 Mode1 模态 Token，学习 RCWA-SMM
-残差并输出 eta_pred = eta_SMM + residual_NN，用于评估模态物理信息的贡献。
-网络架构：将 [Lambda/lambda, f, h/lambda, theta/90] 分别构造成 4 个标量 Token，映射至
-96 维空间，经 2 层、2 头 Transformer 编码器后展平为 384 维特征，再通过 384-64-2 的 MLP
-输出两通道残差；不使用 CLS Token、池化或模态特征，SMM 效率仅用于最终叠加。
-训练策略：10000 个样本按 8:1:1 划分，随机种子 42；仅用训练集拟合标准化器；采用 SmoothL1
-(beta=0.5)、AdamW（lr=3e-4，weight_decay=1e-4）、batch size 256、最多 1000 轮、梯度裁剪 1.0；
-ReduceLROnPlateau 连续 20 轮未改善时将学习率减半，最低 1e-6；连续 100 轮未改善则早停。
-输出内容：模型、标准化器、数据划分、训练历史、测试集预测与评价指标。本消融脚本不生成图片。
-"""
-
 import json
 import os
 import random
