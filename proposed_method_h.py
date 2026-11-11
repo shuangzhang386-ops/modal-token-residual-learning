@@ -1,15 +1,3 @@
-"""
-主要作用：利用 SMM 引导的模态 Token 残差学习预测 TE 偏振利特罗光栅的 0 级和 -1 级衍射效率。
-网络架构：输入序列为 [CLS, Geometry, Mode0, Mode1]；各 Token 映射至 96 维空间，经 2 层、
-2 头 Transformer 编码器后，将 CLS 特征输入 96-64-2 的 MLP，预测 RCWA-SMM 残差，最终输出
-eta_pred = eta_SMM + residual_NN。网络不使用 SMM 效率、模态差分或 overlap 积分作为输入。
-训练策略：10000 个样本按 8:1:1 划分，随机种子 42；仅用训练集拟合标准化器；采用 SmoothL1
-(beta=0.5)、AdamW（lr=3e-4，weight_decay=1e-4）、batch size 256、最多 1000 轮、梯度裁剪 1.0；
-ReduceLROnPlateau 连续 20 轮未改善时将学习率减半，最低 1e-6；连续 100 轮未改善则早停。
-输出内容：模型、标准化器、数据划分、训练历史、测试集预测与评价指标；仅本脚本生成论文图片，
-图片采用白色背景、Times New Roman 字体、900 dpi，并只保存 PNG 和 SVG 格式。
-"""
-
 import json
 import os
 import random
