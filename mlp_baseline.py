@@ -1,15 +1,3 @@
-"""
-主要作用：作为 MLP 对照模型，以与主模型相同的几何参数和两个主导模式参数学习 RCWA-SMM 残差，
-最终输出 eta_pred = eta_SMM + residual_MLP，用于比较 Transformer 模态 Token 的作用。
-网络架构：将 [Lambda/lambda, f, h/lambda, theta/90, neff0, sin(phi0), cos(phi0),
-neff1, sin(phi1), cos(phi1)] 拼接为 10 维向量，依次通过 128-128-64 的全连接层；每层使用
-LayerNorm、GELU 和 0.08 Dropout，末层输出两通道残差。SMM 效率仅用于最终叠加，不作为输入。
-训练策略：10000 个样本按 8:1:1 划分，随机种子 42；优先复用主模型划分；仅用训练集拟合
-标准化器；采用 SmoothL1（beta=0.5）、AdamW（lr=3e-4，weight_decay=1e-4）、batch size 256、
-最多 1000 轮、梯度裁剪 1.0；ReduceLROnPlateau 的 patience=20、factor=0.5、min_lr=1e-6；
-连续 100 轮未改善则早停。输出模型、标准化器、训练历史、测试预测和评价指标，不生成图片。
-"""
-
 import json
 import os
 import random
